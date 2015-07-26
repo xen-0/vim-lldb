@@ -70,7 +70,7 @@ let s:lldb_commands = [
 function! lldb#pythonInit()
     execute 'python import sys'
     let python_module_dir = fnameescape(globpath(&runtimepath, 'python-vim-lldb'))
-    execute 'python sys.path.append("' . python_module_dir . '")'
+    execute 'python sys.path.append(r"' . python_module_dir . '")'
     execute 'pyfile ' . python_module_dir . '/plugin.py'
 endfunction
 " }}}
