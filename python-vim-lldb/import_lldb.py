@@ -58,4 +58,3 @@ def import_lldb():
 
 if not import_lldb():
   import vim
-  vim.command('redraw | echo "%s"' % " Error loading lldb module; vim-lldb will be disabled. Check LLDB installation or set LLDB environment variable.")
