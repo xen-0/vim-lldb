@@ -12,3 +12,4 @@ except ImportError:
 else:
   # Everthing went well, so use import to start the plugin controller 
   from lldb_controller import *
+  vim.command("let l:python_plugin_initialized = 1")

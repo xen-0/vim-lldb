@@ -72,6 +72,10 @@ function! lldb#pythonInit()
     let python_module_dir = fnameescape(globpath(&runtimepath, 'python-vim-lldb'))
     execute 'python sys.path.append(r"' . python_module_dir . '")'
     execute 'pyfile ' . python_module_dir . '/plugin.py'
+    if !exists("l:python_plugin_initialized")
+        return 1
+    endif
+    return 0
 endfunction
 " }}}
 
@@ -106,7 +110,9 @@ function lldb#createKeyMaps()
 endfunction
 
 function! s:InitLldbPlugin()
-    call lldb#pythonInit()
+    if lldb#pythonInit()
+        return
+    endif
     call lldb#createCommands()
     call lldb#createKeyMaps()
 endfunction()
