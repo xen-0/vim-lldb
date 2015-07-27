@@ -25,10 +25,10 @@ def import_lldb():
     lldb_executable = os.environ['LLDB']
 
   # Try using builtin module location support ('lldb -P')
-  from subprocess import check_output, CalledProcessError
+  from subprocess import check_output, CalledProcessError, PIPE as sb_pipe
   try:
     with open(os.devnull, 'w') as fnull:
-      lldb_minus_p_path = check_output("%s -P" % lldb_executable, shell=True, stderr=fnull).strip()
+      lldb_minus_p_path = check_output("%s -P" % lldb_executable, shell=True, stderr=fnull, stdin=sb_pipe).strip()
     if not os.path.exists(lldb_minus_p_path):
       #lldb -P returned invalid path, probably too old
       pass
