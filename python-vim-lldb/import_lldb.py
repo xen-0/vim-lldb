@@ -25,22 +25,26 @@ def import_lldb():
     lldb_executable = os.environ['LLDB']
 
   # Try using builtin module location support ('lldb -P')
-  from subprocess import check_output, CalledProcessError, PIPE as sb_pipe
   try:
-    with open(os.devnull, 'w') as fnull:
-      lldb_minus_p_path = check_output("%s -P" % lldb_executable, shell=True, stderr=fnull, stdin=sb_pipe).strip()
-    if not os.path.exists(lldb_minus_p_path):
-      #lldb -P returned invalid path, probably too old
+    from subprocess import check_output, CalledProcessError, PIPE as sb_pipe
+    try:
+      with open(os.devnull, 'w') as fnull:
+        lldb_minus_p_path = check_output("%s -P" % lldb_executable, shell=True, stderr=fnull, stdin=sb_pipe).strip()
+      if not os.path.exists(lldb_minus_p_path):
+        #lldb -P returned invalid path, probably too old
+        pass
+      else:
+        sys.path.append(lldb_minus_p_path)
+        import lldb
+        return True
+    except CalledProcessError:
+      # Cannot run 'lldb -P' to determine location of lldb python module
       pass
-    else:
-      sys.path.append(lldb_minus_p_path)
-      import lldb
-      return True
-  except CalledProcessError:
-    # Cannot run 'lldb -P' to determine location of lldb python module
-    pass
+    except ImportError:
+      # Unable to import lldb module from path returned by `lldb -P`
+      pass
   except ImportError:
-    # Unable to import lldb module from path returned by `lldb -P`
+    #Invalid python version
     pass
 
   # On Mac OS X, use the try the default path to XCode lldb module
